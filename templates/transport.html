@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="transport_div_all">
+<div class="transport_div" id="from">
+    Откуда
+    <br><input type="text">
+</div>
+<div class="transport_div" id="to">
+    Куда
+    <br><input type="text">
+</div>
+<div class="transport_div" id="date">
+    Когда
+    <br><input type="date">
+</div>
+    <a href="/start"><button type="button" class="btn">В путь!</button></a>
+</div>
+
+{% endblock %}
