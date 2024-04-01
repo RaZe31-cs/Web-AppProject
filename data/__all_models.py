@@ -1,2 +1,3 @@
 from . import users
-# from . import trips
+from . import trips
+from . import intermediate_trips
