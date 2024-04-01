@@ -133,40 +133,48 @@ a:hover {
     color:#2b211b;
     border-radius: 30px;
     align-content: center;
-    width: 70%;
+    width: min-content;
     height: auto;
     font-size: 18px;
-    margin: 15px;
+    margin: auto;
     opacity:0; 
     transition: 1s; 
     animation: show 1.5s 1;
     animation-fill-mode: forwards; 
+    display: flex;
+    justify-content: center;
 }
 
-.transport_div_all button {
+.btn_go {
+    display: flex;
+    justify-content: center;
+}
+
+.btn_go button {
     font-size: 18px;
     background: #2b211b;
     color: #ede2dc;
     border-radius: 30px;
-    padding: 20px 60px;
+    padding: 25px 70px;
 }
 
-.transport_div_all button:hover {
+.btn_go button:hover {
     background: #47372e;
     color: #ede2dc;
 }
 
 
 .transport_div {
-    display: inline-block;
-    width: auto;
-    height: auto;
+    max-width: 300px;
     padding: 20px;
     opacity:0; 
     transition: 1s; 
     animation: show 1.5s 1;
     animation-fill-mode: forwards;
     border: solid #2b211b;
+}
+.transport_div input {
+    min-width: 250px;
 }
 
 #from {
