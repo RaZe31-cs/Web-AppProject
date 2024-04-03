@@ -1,22 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="transport_div_all">
-<div class="transport_div" id="from">
-    Откуда
-    <br><input type="text">
-</div>
-<div class="transport_div" id="to">
-    Куда
-    <br><input type="text">
-</div>
-<div class="transport_div" id="date">
-    Когда
-    <br><input type="date">
-</div>
-</div>
-<div class="btn_go">
-    <a href="/start"><button type="button" >В путь!</button></a>
+<form action="" method="post">
+    <div class="transport_div_all">
+        {{ form.hidden_tag() }}
+        <div class="transport_div" id="from">
+            {{ form.from_text(class="form-control", placeholder="Откуда") }}<br>
+            {% for error in form.from_text.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="transport_div" id="to">
+            {{ form.to_text(class="form-control", placeholder="Куда") }}<br>
+            {% for error in form.to_text.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="transport_div" id="date">
+            {{ form.date(class="form-control", type="date", placeholder="Когда") }}<br>
+            {% for error in form.date.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div style="color: white">{{ message }}</div>
+         {{ form.submit(type="submit", class="btn_go") }}
+    </div>
+</form>
+<div class="schedule-list">
+    {% for thread in data %}
+        <div class="schedule">
+        {% for item in thread %}
+            {% if item["transport"] == 'train' or item["transport"] == 'suburban'%}
+                <div><h4><i class="fa-solid fa-train fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
+            {% elif item["transport"] == 'plane'%}
+                <div><h4><i class="fa-solid fa-plane fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
+            {% elif item["transport"] == 'bus'%}
+                <div><h4><i class="fa-solid fa-bus fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
+            {% else%}
+            <div><h4>{{item["name"]}}</h4></div>
+            {% endif %}
+            <div>Откуда: {{item["fr"]}} Куда: {{item["to"]}}</div>
+            <div>{{item["start"]}} {{item["end"]}}</div>
+        {% endfor %}
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

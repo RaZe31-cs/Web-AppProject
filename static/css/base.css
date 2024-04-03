@@ -13,6 +13,20 @@ body {
     background-size: cover;
 }
 
+body::-webkit-scrollbar {
+    width: 15px; /* Ширина всего элемента навигации */
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: #fff; /* Цвет дорожки */
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: #050c26; /* Цвет бегунка */
+    border-radius: 20px; /* Округление бегунка */
+    border: 3px solid #050c26; /* Оформление границ бегунка */
+  }
+
 img {
     max-width: 100%;
     max-height: auto;
@@ -110,6 +124,7 @@ a:hover {
 
 .login_div .form-control {
     height: 38px;
+    margin: 3px;
 }
 
 .login_div .btn {
@@ -129,14 +144,12 @@ a:hover {
 
 
 .transport_div_all {
-    background: #b68b62;
     color:#2b211b;
-    border-radius: 30px;
     align-content: center;
     width: min-content;
     height: auto;
     font-size: 18px;
-    margin: auto;
+    margin: 10px;
     opacity:0; 
     transition: 1s; 
     animation: show 1.5s 1;
@@ -148,17 +161,16 @@ a:hover {
 .btn_go {
     display: flex;
     justify-content: center;
-}
-
-.btn_go button {
-    font-size: 18px;
+    font-size: 16px;
     background: #2b211b;
     color: #ede2dc;
+    margin: 10px;
     border-radius: 30px;
-    padding: 25px 70px;
+    padding: 12px 50px;
+    align-self: center;
 }
 
-.btn_go button:hover {
+.btn_go:hover {
     background: #47372e;
     color: #ede2dc;
 }
@@ -166,21 +178,36 @@ a:hover {
 
 .transport_div {
     max-width: 300px;
-    padding: 20px;
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 0px;
     opacity:0; 
     transition: 1s; 
     animation: show 1.5s 1;
     animation-fill-mode: forwards;
-    border: solid #2b211b;
+    display: inline-block;
 }
+
 .transport_div input {
     min-width: 250px;
 }
 
-#from {
-    border-radius: 30px 0px 0px 30px;
+.transport_div .form-control {
+    height: 38px;
 }
 
-#date {
-    border-radius: 0px 30px 30px 0px;
+.schedule-list {
+    height: 500px;
+    width: 70%;
+    overflow-y: scroll;
+    margin: auto;
+}
+
+.schedule {
+    align-content: center;
+    background-color: #ede2dc;
+    color: #463830;
+    margin: auto;
+    margin-top: 30px;
+    padding: 50px;
 }
