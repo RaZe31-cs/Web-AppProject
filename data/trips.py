@@ -3,6 +3,16 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
+association_table = sqlalchemy.Table(
+    'association',
+    SqlAlchemyBase.metadata,
+    sqlalchemy.Column('trip_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('trips.id')),
+    sqlalchemy.Column('user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
+)
+
+
 class Trip(SqlAlchemyBase):
     __tablename__ = 'trips'
 

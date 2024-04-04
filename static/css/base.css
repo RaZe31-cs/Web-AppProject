@@ -156,6 +156,7 @@ a:hover {
     animation-fill-mode: forwards; 
     display: flex;
     justify-content: center;
+    
 }
 
 .btn_go {
@@ -211,3 +212,10 @@ a:hover {
     margin-top: 30px;
     padding: 50px;
 }
+
+/* .hotel_list {
+    height: 500px;
+    width: 50%;
+    overflow-y: scroll;
+    text-align: right;
+} */
