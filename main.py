@@ -8,8 +8,9 @@ from data.users import User
 from forms.user import RegisterForm, LoginForm
 from forms.trip import TripForm
 from forms.hotel import HotelForm
+from functions import get_hotels_by_city
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
@@ -135,9 +136,16 @@ def start_trip():
             print(response.json())'''
 
 
+@app.route("/start/choose_hotel/<city>", methods=['GET', 'POST'])
+def choose_hotel(city):
+    hotels = get_hotels_by_city(city)
+    print(hotels)
+    return render_template("choose_hotel.html", hotels=hotels)
+
+
 def main():
     db_session.global_init("db/web_project.db")
-    app.run()
+    app.run(debug=True)
 
 
 if __name__ == '__main__':

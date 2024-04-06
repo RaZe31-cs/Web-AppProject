@@ -10,8 +10,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="static/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
     <script src="https://kit.fontawesome.com/207b74045d.js" crossorigin="anonymous"></script>
+    <script src="https://api-maps.yandex.ru/v3/?apikey=938e2425-d8c5-43fc-924c-db837dbdbddb&lang=ru_RU"></script>
+    <script>
+        initMap();
+
+        async function initMap() {
+            await ymaps3.ready;
+
+            const {YMap, YMapDefaultSchemeLayer} = ymaps3;
+
+            const map = new YMap(
+                document.getElementById('map'),
+                {
+                    location: {
+                        center: [37.588144, 55.733842],
+                        zoom: 10
+                    }
+                }
+            );
+
+            map.addChild(new YMapDefaultSchemeLayer());
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
@@ -58,5 +80,15 @@
 <main>
     {% block content %}{% endblock %}
 </main>
+<script>
+    async function initMap(a, b) {
+        alert('скрипт сработал')
+        map.setLocation({
+        center: [a, b],
+        zoom: 5
+        }); 
+        
+    }
+</script>
 </body>
 </html>

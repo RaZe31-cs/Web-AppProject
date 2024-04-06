@@ -213,9 +213,31 @@ a:hover {
     padding: 50px;
 }
 
-/* .hotel_list {
-    height: 500px;
-    width: 50%;
+.hotels_and_map {
+    width: 90%;
+    margin-right: auto; /* Авто-отступ справа */
+    margin-left: auto;
+}
+
+.cont_choose_hotel {
+    height: 600px;
+    width: 35%;
     overflow-y: scroll;
-    text-align: right;
-} */
+    float: left;
+    padding: 30px;
+}
+
+.hotel {
+    align-content: center;
+    background-color: #ede2dc;
+    color: #463830;
+    margin-top: 30px;
+    padding: 50px;
+}
+
+#map {
+    width: 50%;
+    height: 470px;
+    padding: 30px;
+    float: left;
+}
