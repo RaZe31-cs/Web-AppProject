@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="hotels_and_map">
+        <div class="cont_choose_hotel">
+            {% for hotel in hotels %}
+                <div class="hotel">
+                    <div class="hotel_name">
+                        <h4>{{ hotel['name'] }}</h4>
+                        <h6 id="geo" data-coord1="{{hotel['geoCode']['longitude']}}" data-coord2="{{hotel['geoCode']['latitude']}}">{{ hotel['geoCode'] }}</h6>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-dark" onclick="changeCenter(this)">Показать на карте</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="map"></div>
+    </div>
+{% endblock %}

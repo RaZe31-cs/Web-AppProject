@@ -13,27 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
     <script src="https://kit.fontawesome.com/207b74045d.js" crossorigin="anonymous"></script>
     <script src="https://api-maps.yandex.ru/v3/?apikey=938e2425-d8c5-43fc-924c-db837dbdbddb&lang=ru_RU"></script>
-    <script>
-        initMap();
-
-        async function initMap() {
-            await ymaps3.ready;
-
-            const {YMap, YMapDefaultSchemeLayer} = ymaps3;
-
-            const map = new YMap(
-                document.getElementById('map'),
-                {
-                    location: {
-                        center: [37.588144, 55.733842],
-                        zoom: 10
-                    }
-                }
-            );
-
-            map.addChild(new YMapDefaultSchemeLayer());
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
@@ -80,15 +60,5 @@
 <main>
     {% block content %}{% endblock %}
 </main>
-<script>
-    async function initMap(a, b) {
-        alert('скрипт сработал')
-        map.setLocation({
-        center: [a, b],
-        zoom: 5
-        }); 
-        
-    }
-</script>
 </body>
 </html>

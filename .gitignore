@@ -1,5 +1,4 @@
 data/__pycache__/
 forms/__pycache__/
 test.py
-forms/hotel.py
-templates/choose_hotel.html
+__pycache__/
