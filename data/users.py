@@ -14,6 +14,8 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, unique=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
 
+    trips = orm.relationship("Trip", back_populates='user')
+
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 

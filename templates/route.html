@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script>
+    var center_points = {{ data.center_points }};
+    var city = "{{ data.city }}";
+    var city_iata = "{{ data.city_iata }}";
+    var index = "{{ data.index }}"
+    console.log(center_points, city, city_iata, index);
+</script>
+<div align="center" class="route_map_div">
+    <h2 align="center">Создать маршрут</h2>
+    <div id="routeMap" style="width:900px; height:550px; display: inline-block"></div>
+    <div style="display: inline-block; vertical-align: top">
+        <button type="button" class="btn_route_map" id="stopEditPolyline">Завершить редактирование</button>
+        <button type="button" class="btn_route_map" id="newPolyline">Новый маршрут</button>
+        <button type="button" class="btn_route_map" id="generate">Сгенерировать маршрут</button>
+        <button type="button" class="btn_route_map" id="save">Сохранить маршрут</button>
+        <a href="/save_trip" style="text-decoration: none"><button type="button" class="btn_route_map">Сохранить поездку</button></a>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -6,7 +6,12 @@
         <p>Дайте себе возможность окунуться в море новых впечатлений и эмоций.
             <br>Пусть Ваше путешествие станет незабываемым и полным приятных воспоминаний.</p>
         <br>
-        <a href="/start"><button type="button" class="btn">В путь!</button></a>
+        {% if current_user.is_authenticated %}
+            <a href="/start"><button type="button" class="btn">В путь!</button></a>
+        {% else %}
+            <a href="/register"><button type="button" class="btn">В путь!</button></a>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

@@ -21,7 +21,6 @@ async function initMap() {
 
     window.map.addChild(new YMapDefaultFeaturesLayer());
 
-
 }
 
 

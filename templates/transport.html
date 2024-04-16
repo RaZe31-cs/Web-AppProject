@@ -28,28 +28,49 @@
             </div>
             {% endfor %}
         </div>
-        <div style="color: white">{{ message }}</div>
-         {{ form.submit(type="submit", class="btn_go") }}
+        {{ form.submit(type="submit", class="btn_go") }}
+        <div class="transport_div" style="color: white">{{ message }}</div>
     </div>
 </form>
+{% if data %}
 <div class="schedule-list">
     {% for thread in data %}
-        <div class="schedule">
+    <div class="schedule" id={{thread[0]}}>
         {% for item in thread %}
-            {% if item["transport"] == 'train' or item["transport"] == 'suburban'%}
-                <div><h4><i class="fa-solid fa-train fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
-            {% elif item["transport"] == 'plane'%}
-                <div><h4><i class="fa-solid fa-plane fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
-            {% elif item["transport"] == 'bus'%}
-                <div><h4><i class="fa-solid fa-bus fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h4></div>
-            {% else%}
-            <div><h4>{{item["name"]}}</h4></div>
-            {% endif %}
-            <div>Откуда: {{item["fr"]}} Куда: {{item["to"]}}</div>
-            <div>{{item["start"]}} {{item["end"]}}</div>
-        {% endfor %}
+        {% if item["transport"] == 'train' or item["transport"] == 'suburban'%}
+        <div style="display: inline-block"><h3><i class="fa-solid fa-train fa-2xl" style="color: #463830;"></i>
+            {{item["name"]}}</h3></div>
+        {% elif item["transport"] == 'plane'%}
+        <div><h3><i class="fa-solid fa-plane fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h3></div>
+        {% elif item["transport"] == 'bus'%}
+        <div><h3><i class="fa-solid fa-bus fa-2xl" style="color: #463830;"></i> {{item["name"]}}</h3></div>
+        {% else%}
+        <div><h3>{{item["name"]}}</h3></div>
+        {% endif %}
+        <div>
+            <br><b>Откуда:</b> {{item["fr"]}}
+            <br><b>Куда:</b> {{item["to"]}}
         </div>
+        <div>
+            <br><b>Отправление:</b> {{item["start"]}}
+            <br><b>Прибытие:</b> {{item["end"]}}
+        </div>
+        <br>
+        {% endfor %}
+        <button type="button" onclick="sendRequest('{{ loop.index }}', '{{ fr }}', '{{ to }}', '{{ date }}')" class="btn_transport" id="getData">Выбрать
+            маршрут
+        </button>
+
+    </div>
     {% endfor %}
 </div>
-
+{% endif %}
+<script>
+    function sendRequest(id, from, to, date) {
+        fetch('/start?id=' + id + '&from=' + from + '&to=' + to + '&date=' + date)
+            .then(response => response.json())
+            .then(data => {
+            });
+    }
+</script>
 {% endblock %}
