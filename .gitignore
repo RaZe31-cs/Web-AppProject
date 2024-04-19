@@ -2,3 +2,4 @@ data/__pycache__/
 forms/__pycache__/
 test.py
 __pycache__/
+.venv/

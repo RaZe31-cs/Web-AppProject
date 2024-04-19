@@ -4,6 +4,10 @@ from config import API_AMADEUS, SECRET_KEY_AMADEUS, API_YANDEX_SCHEDULE, API_YAN
 import json
 import datetime as dt
 from random import choice
+from translatepy import Translator
+import os
+
+translator = Translator()
 
 
 def get_hotels_by_city(city):
@@ -12,15 +16,11 @@ def get_hotels_by_city(city):
         client_secret=SECRET_KEY_AMADEUS
     )
     try:
-        '''
-        Get list of hotels by city code
-        '''
-        city_code = \
-            requests.get(f'https://www.travelpayouts.com/widgets_suggest_params?q=Из%20{city}%20в%20Лондон').json()[
-                'origin']['iata']
-        response = amadeus.reference_data.locations.hotels.by_city.get(cityCode=city_code)
-
-        return response.data[:5]
+        # iata = get_iata_from_city(city)
+        iata = city
+        res = amadeus.reference_data.locations.hotels.by_city.get(cityCode=iata.upper())
+        print(res.data[:5])
+        return res.data[:5]
     except ResponseError as error:
         raise error
 
@@ -152,4 +152,21 @@ def create_routes(from_coords, to_coords, city_iata):
     return index
 
 
+def get_iata_from_city(city) -> str:
+    # en_city = translator.translate(city, 'en').result
+    # with open(os.path.join('static', 'json', 'airports.json'), 'r') as file:
+    #         json_data = json.load(file)
+    #         for k, v in json_data.items():
+    #             if v["iata"] and v["city"]:
+    #                 if v['city'].strip().lower() == en_city.strip().lower():
+    #                     return v['iata']
+    #         else:
+    #             return None
+    with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
+        codes = json.load(f)
+    return codes['city_to_iata'][city]
 
+
+
+if __name__ == '__main__':
+    get_hotels_by_city('Москва')

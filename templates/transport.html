@@ -57,10 +57,9 @@
         </div>
         <br>
         {% endfor %}
-        <button type="button" onclick="sendRequest('{{ loop.index }}', '{{ fr }}', '{{ to }}', '{{ date }}')" class="btn_transport" id="getData">Выбрать
-            маршрут
+        <button type="button" onclick="sendRequest('{{ loop.index }}', '{{ fr }}', '{{ to }}', '{{ date }}')" class="btn_transport" id="getData"><a href="start/choose_hotel/{{to}}">Выбрать
+            маршрут</a>
         </button>
-
     </div>
     {% endfor %}
 </div>

@@ -25,7 +25,7 @@ CURRENT_TRIP = {}
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    return db_sess.get(User, user_id)
 
 
 @app.route("/")
@@ -166,7 +166,8 @@ def start_trip():
         with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
             codes = json.load(f)
             city = codes['iata_to_city'][to]
-        return redirect(url_for('choose_hotel', city=city))
+        hotels = get_hotels_by_city(city)
+        return render_template("choose_hotel.html", hotels=hotels)
     else:
         if form.validate_on_submit():
             if 'submit_next' in request.form:
@@ -221,11 +222,19 @@ def generate_routes():
     return {'coords': coords, 'index': index}
 
 
-@app.route("/start/choose_hotel/<city>", methods=['GET', 'POST'])
+@app.route("/start/choose_hotel/<city>")
 def choose_hotel(city):
     hotels = get_hotels_by_city(city)
-    print(hotels)
-    return render_template("index.html", hotels=hotels)
+    with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
+        codes = json.load(f)
+        name_city = codes['iata_to_city'][city]
+    city_coords = get_placemark(name_city)['center_points']
+    all_points = []
+    for i in hotels:
+        all_points.append(','.join([str(i['geoCode']['latitude']), str(i['geoCode']['longitude'])]))
+    all_points = ';'.join(all_points)
+    print(all_points)
+    return render_template("choose_hotel.html", hotels=hotels, lon=city_coords[0], lat=city_coords[1], all_points=all_points)
 
 
 def main():

@@ -15,6 +15,10 @@
                 </div>
             {% endfor %}
         </div>
+        <div id="map"></div>
     </div>
-<div id="map"></div>
+    <script>
+        initMap('{{lon}}', '{{lat}}', '{{all_points}}')
+    </script>
+    
 {% endblock %}

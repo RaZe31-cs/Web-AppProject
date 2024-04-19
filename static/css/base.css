@@ -234,7 +234,7 @@ a:hover {
     width: 90%;
     margin-right: auto;
     margin-left: auto;
-    display: inline-block;
+    display: inline
 }
 
 .cont_choose_hotel {
@@ -243,6 +243,7 @@ a:hover {
     margin-left: 20px;
     overflow-y: scroll;
     text-align: right;
+    float: left
 }
 
 
