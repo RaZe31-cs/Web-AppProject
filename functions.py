@@ -10,7 +10,7 @@ import os
 translator = Translator()
 
 
-def get_hotels_by_city(city):
+def get_hotels_by_iata(city):
     amadeus = Client(
         client_id=API_AMADEUS,
         client_secret=SECRET_KEY_AMADEUS
@@ -152,6 +152,19 @@ def create_routes(from_coords, to_coords, city_iata):
     return index
 
 
+def save_cookies(dict_cookies, res):
+    for k, v in dict_cookies.items():
+        res.set_cookie(k, v)
+    return res
+
+
+# def add_cookies(k, v, res):
+#     v_old = res.cookies.get(k)
+#     v_old
+#     res.cookies.set(k, v)
+#     return res
+
+
 def get_iata_from_city(city) -> str:
     # en_city = translator.translate(city, 'en').result
     # with open(os.path.join('static', 'json', 'airports.json'), 'r') as file:
@@ -167,6 +180,12 @@ def get_iata_from_city(city) -> str:
     return codes['city_to_iata'][city]
 
 
+def check_cookies(cookies: dict) -> bool:
+    if cookies.get('hotel_id', False):
+        return True
+    return False
+
+
 
 if __name__ == '__main__':
-    get_hotels_by_city('Москва')
+    get_hotels_by_iata('Москва')

@@ -45,6 +45,7 @@ async function changeCenter(el) {
     var parent = el.parentNode.parentNode;
     // Получаем родительский div
     var h6Element = parent.querySelector('h6');   
+    var h4Element_title = parent.getElementsByTagName("h4");
     //Находим в нем h6
     var longitude = h6Element.getAttribute('data-coord1');
     var latitude = h6Element.getAttribute('data-coord2');
@@ -53,17 +54,39 @@ async function changeCenter(el) {
         center: [Number(longitude), Number(latitude)],
         zoom: 17
       })
-
     const content = document.createElement('section');
 }
 
 
-async function changeCenter_by_coords(coords) {
+async function changeCenter_by_coords(coords, title) {
     alert(coords)
     window.map.setLocation({
         center: coords,
         zoom: 5
       })
-
     const content = document.createElement('section');
+}
+
+
+async function save_trip(coords, title) {
+
+}
+
+
+async function request_post(lon, lat, title) {
+    alert('Запрос отправлен')
+    alert(lon + ' ' + lat + ' ' + title)
+    fetch('/save_trip', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                'lon': lon,
+                'lat': lat,
+                'title': title
+            }
+        )
+    })
 }

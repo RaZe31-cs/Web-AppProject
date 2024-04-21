@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<form method="post">
     <div class="hotels_and_map">
         <div class="cont_choose_hotel">
             {% for hotel in hotels %}
@@ -8,6 +9,14 @@
                     <div class="hotel_name">
                         <h4>{{ hotel['name'] }}</h4>
                         <h6 id="geo" data-coord1="{{hotel['geoCode']['longitude']}}" data-coord2="{{hotel['geoCode']['latitude']}}">{{ hotel['geoCode'] }}</h6>
+                    </div>
+                    <div class="btn_add_trip_to_profile">
+                        {% set lon = hotel['geoCode']['longitude'] %}
+                        {% set lat = hotel['geoCode']['latitude'] %}
+                        {% set title = hotel['name'] %}
+                        <button type="submit" class="btn btn-warning" onclick='request_post("{{lon}}", "{{lat}}", "{{title}}")'>
+                            Выбрать
+                        </button>
                     </div>
                     <div>
                         <button type="button" class="btn btn-dark" onclick="changeCenter(this)">Показать на карте</button>
@@ -18,7 +27,7 @@
         <div id="map"></div>
     </div>
     <script>
-        initMap('{{lon}}', '{{lat}}', '{{all_points}}')
+        initMap('{{lon_old}}', '{{lat_old}}', '{{all_points}}')
     </script>
-    
+</form>
 {% endblock %}

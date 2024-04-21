@@ -3,7 +3,7 @@ import requests
 import datetime as dt
 import json
 from flask import Flask
-from flask import render_template, redirect, request, abort, url_for, jsonify
+from flask import render_template, redirect, request, abort, url_for, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.users import User
@@ -11,7 +11,7 @@ from data.trips import Trip
 from forms.user import RegisterForm, LoginForm
 from forms.trip import TripForm
 # from forms.hotel import HotelForm
-from functions import get_hotels_by_city, get_transport, get_placemark, add_to_json, create_routes
+from functions import get_hotels_by_iata, get_transport, get_placemark, add_to_json, create_routes, save_cookies, check_cookies
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -19,7 +19,7 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-CURRENT_TRIP = {}
+# CURRENT_TRIP = {}
 
 
 @login_manager.user_loader
@@ -130,44 +130,42 @@ def logout():
     return redirect("/")
 
 
-@app.route('/save_trip')
+@app.route('/save_trip', methods=['GET', 'POST'])
 def create_trip():
-    if CURRENT_TRIP:
-        print(CURRENT_TRIP)
+    print(request.cookies)
+    if check_cookies(request.cookies):
         db_sess = db_session.create_session()
         trip = Trip(
-            city_from=CURRENT_TRIP['city_from'],
-            city_to=CURRENT_TRIP['city_to'],
-            date=CURRENT_TRIP['date'],
-            transport_id=CURRENT_TRIP['transport_id'],
-            hotel_id=CURRENT_TRIP['hotel_id'],
-            list_of_routes=','.join(map(str, CURRENT_TRIP['list_of_routes']))
+            city_from=request.cookies.get('city_from', ''),
+            city_to=request.cookies.get('city_to', ''),
+            date=dt.datetime.strptime(request.cookies.get('date', ''), '%Y-%m-%d'),
+            transport_id=request.cookies.get('transport_id', ''),
+            hotel_id=request.cookies.get('hotel_id', ''),
+            list_of_routes=','.join(map(str, request.cookies.get('list_of_routes', '')))
         )
+        print(trip)
         current_user.trips.append(trip)
         db_sess.merge(current_user)
         db_sess.commit()
-    return redirect("/")
+    return redirect("/profile")
 
 
 @app.route("/start", methods=['GET', 'POST'])
 def start_trip():
-    global CURRENT_TRIP
     form = TripForm()
     if request.args:
         args = request.args
         fr, to, transport_id = args.get('from'), args.get('to'), args.get('id')
-        date = dt.datetime.strptime(args.get('date'), '%Y-%m-%d')
+        date = dt.datetime.strptime(args.get('date'), '%Y-%m-%d').strftime('%Y-%m-%d')
         CURRENT_TRIP = {'city_from': fr,
                         'city_to': to,
                         'date': date,
-                        'transport_id': transport_id,
-                        'hotel_id': 1,
-                        'list_of_routes': []}
-        with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
-            codes = json.load(f)
-            city = codes['iata_to_city'][to]
-        hotels = get_hotels_by_city(city)
-        return render_template("choose_hotel.html", hotels=hotels)
+                        'transport_id': str(transport_id),
+                        'hotel_id': str(0),
+                        'list_of_routes': ','.join([])}
+        hotels = get_hotels_by_iata(to)
+        res = make_response(render_template('choose_hotel.html', hotels=hotels))
+        return save_cookies(CURRENT_TRIP, res)
     else:
         if form.validate_on_submit():
             if 'submit_next' in request.form:
@@ -207,8 +205,12 @@ def routes(city):
             index = add_to_json(data)
         else:
             index = data['index']
-        if index not in CURRENT_TRIP['list_of_routes']:
-            CURRENT_TRIP['list_of_routes'].append(index)
+        if index not in request.cookies.get(['list_of_routes']):
+            list_of_routes = request.cookies.get('list_of_routes')
+            list_of_routes.split()
+            CURRENT_TRIP = {
+                'list_of_routes': index
+            }
     coords_data = get_placemark(city)
     return render_template('route.html', data=coords_data)
 
@@ -222,19 +224,33 @@ def generate_routes():
     return {'coords': coords, 'index': index}
 
 
-@app.route("/start/choose_hotel/<city>")
+@app.route("/start/choose_hotel/<city>", methods=['GET', 'POST'])
 def choose_hotel(city):
-    hotels = get_hotels_by_city(city)
-    with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
-        codes = json.load(f)
-        name_city = codes['iata_to_city'][city]
-    city_coords = get_placemark(name_city)['center_points']
-    all_points = []
-    for i in hotels:
-        all_points.append(','.join([str(i['geoCode']['latitude']), str(i['geoCode']['longitude'])]))
-    all_points = ';'.join(all_points)
-    print(all_points)
-    return render_template("choose_hotel.html", hotels=hotels, lon=city_coords[0], lat=city_coords[1], all_points=all_points)
+    if request.method == 'POST':
+        return redirect('/profile')
+    else:
+        hotels = get_hotels_by_iata(city)
+        with open('static/json/iata_codes.json', 'r', encoding='utf-8') as f:
+            codes = json.load(f)
+            name_city = codes['iata_to_city'][city]
+        city_coords = get_placemark(name_city)['center_points']
+        all_points = []
+        for i in hotels:
+            all_points.append(','.join([str(i['geoCode']['latitude']), str(i['geoCode']['longitude'])]))
+        all_points = ';'.join(all_points)
+        return render_template("choose_hotel.html", hotels=hotels, lon_old=city_coords[0], lat_old=city_coords[1], all_points=all_points)
+
+
+@app.route("/start/choose_hotel/complete", methods=['POST'])
+def load_in_cookie():
+    data = request.json
+    print(data)
+    res = make_response(redirect('/save_trip'))
+    # for k, v in CURRENT_TRIP.items():
+    #     print(k, v)
+    #     res.set_cookie(k, v, max_age=60 * 60 * 24 * 365)
+    return res
+
 
 
 def main():

@@ -11,11 +11,12 @@ class Trip(SqlAlchemyBase):
     city_to = sqlalchemy.Column(sqlalchemy.String)
     date = sqlalchemy.Column(sqlalchemy.DateTime)
     transport_id = sqlalchemy.Column(sqlalchemy.Integer)
-    hotel_id = sqlalchemy.Column(sqlalchemy.Integer)
+    hotel_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("hotels.id"))
     list_of_routes = sqlalchemy.Column(sqlalchemy.String)
-
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
+
     user = orm.relationship('User')
+    hotel = orm.relationship('Hotel')
 
 
     def __repr__(self):
