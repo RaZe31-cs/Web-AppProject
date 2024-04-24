@@ -73,10 +73,8 @@ async function save_trip(coords, title) {
 }
 
 
-async function request_post(lon, lat, title) {
-    alert('Запрос отправлен')
-    alert(lon + ' ' + lat + ' ' + title)
-    fetch('/save_trip', {
+async function request_post(lon, lat, title, name_city) {
+    fetch('/save_hotel', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -85,7 +83,8 @@ async function request_post(lon, lat, title) {
             {
                 'lon': lon,
                 'lat': lat,
-                'title': title
+                'title': title,
+                'name_city': name_city
             }
         )
     })

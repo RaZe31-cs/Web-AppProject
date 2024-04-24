@@ -132,10 +132,10 @@ def add_to_json(route):
 def get_route_index(city_iata):
     with open("static/json/route.json", "r") as file:
         json_data = json.load(file)
-
     if city_iata not in json_data["routes"]["cities"] or not json_data["routes"]["cities"][city_iata]:
         return "1"
     return str(int(list(json_data["routes"]["cities"][city_iata].keys())[-1]) + 1)
+
 
 
 def create_routes(from_coords, to_coords, city_iata):
@@ -186,6 +186,21 @@ def check_cookies(cookies: dict) -> bool:
     return False
 
 
+def download_photo_hotel(path: str, coord: list) -> None:
+    url = 'https://static-maps.yandex.ru/v1'
+    params = {
+        'l': 'map',
+        'pt': f'{coord[0]},{coord[1]},home',
+        'size': '300,200',
+        'spn': '0.01,0.01',
+        'll': f'{coord[0]},{coord[1]}',
+        'apikey': 'c072f5eb-e64c-4916-b8d2-8ce214cc7862'
+    }
+    response = requests.get(url, params=params)
+    print(response)
+    with open(path, "wb") as file:
+        file.write(response.content)
+
 
 if __name__ == '__main__':
-    get_hotels_by_iata('Москва')
+    download_photo_hotel('static/img/hotel.png', [65.332022, 55.435296])
