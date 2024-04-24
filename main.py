@@ -3,7 +3,7 @@ import requests
 import datetime as dt
 import json
 from flask import Flask
-from flask import render_template, redirect, request, abort, url_for, jsonify, make_response
+from flask import render_template, redirect, request, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.users import User
@@ -11,9 +11,7 @@ from data.trips import Trip
 from data.hotels import Hotel
 from forms.user import RegisterForm, LoginForm
 from forms.trip import TripForm
-# from forms.hotel import HotelForm
 from functions import *
-from werkzeug.datastructures import ImmutableMultiDict
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -98,6 +96,9 @@ def profile():
                 points = routes_json['routes']['cities'][t.city_to][route]
                 block['routes'].append(get_image(points, t.city_to, route))
         trips.append(block)
+    print(trips)
+    res = make_response(render_template('profile.html', trips=trips))
+    res.set_cookie('hotel_id')
     return render_template('profile.html', trips=trips)
 
 
@@ -111,11 +112,13 @@ def get_image(pt, city, index, l='map', delta=0.005):
         "l": l,
         "pt": pt_str,
         "pl": pl_str,
-        "size": '300,200'
+        "size": '300,200',
+        'apikey': 'c072f5eb-e64c-4916-b8d2-8ce214cc7862'
     }
 
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
+    print(response.status_code)
     if not response:
         sys.exit()
 
@@ -202,6 +205,7 @@ def save_hotel():
     session = db_session.create_session()
     session.add(hotel)
     session.commit()
+    print(hotel.id)
     download_photo_hotel(os.path.join('static', 'img', 'hotel' + str(hotel.id) + '.png'), [request.json['lon'], request.json['lat']])
     res = make_response()
     res.set_cookie('hotel_id', str(hotel.id), max_age=60 * 60 * 24 * 365)
@@ -218,7 +222,8 @@ def routes(city):
             index = data['index']
         coords_data = get_placemark(city)
         res = make_response(render_template('route.html', data=coords_data))
-        res.set_cookie('index', index)
+        cookie_index = request.cookies.get('index', '')
+        res.set_cookie('index', str(index))
         # with open('static/json/route.json', 'r', encoding='utf-8') as f:
         #     routes_json = json.load(f)['routes']['cities'][request.cookies.get('city_to', '')][index]
         res.set_cookie('type', data['type'])
